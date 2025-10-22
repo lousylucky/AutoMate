@@ -1,0 +1,7 @@
+[project]
+name = "automate"
+version = "0.1.0"
+description = "Assistant Numérique de Covoiturage Universel Libre et Évolutif"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
