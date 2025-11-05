@@ -1,0 +1,41 @@
+<div class="min-h-screen flex bg-base-300 text-base-content">
+
+  <!-- sidebar -->
+  <aside
+    class="w-20 md:w-24 bg-base-200 border-r border-base-300 flex flex-col items-center py-4 gap-4"
+  >
+    <div class="avatar placeholder">
+      <div
+        class="bg-primary text-primary-content rounded-full w-12 h-12 flex items-center justify-center text-2xl"
+      >
+        🚗
+      </div>
+    </div>
+
+    <!-- Menu -->
+    <nav class="flex flex-col gap-2 mt-2">
+      <a
+        routerLink="/music"
+        routerLinkActive="btn-active bg-primary text-primary-content"
+        class="btn flex flex-col gap-1 h-16"
+      >
+        <span class="text-xl">🎵</span>
+        <span class="text-[10px] uppercase tracking-wide">Music</span>
+      </a>
+
+      <a
+        routerLink="/navigation"
+        routerLinkActive="btn-active bg-primary text-primary-content"
+        class="btn flex flex-col gap-1 h-16"
+      >
+        <span class="text-xl">🧭</span>
+        <span class="text-[10px] uppercase tracking-wide">Nav</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main screen -->
+  <main class="flex-1 p-4 md:p-6 overflow-y-auto">
+    <router-outlet></router-outlet>
+  </main>
+</div>

@@ -1,0 +1,49 @@
+<div class="space-y-6">
+  <h1 class="text-3xl font-semibold">Navigation</h1>
+
+  <!-- Górny pasek: cel + przycisk -->
+  <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+    <div>
+      <div class="text-xs uppercase opacity-70 tracking-wide">
+        Destination
+      </div>
+      <div class="text-lg font-semibold">
+        Home – Grenoble
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-sm md:btn-md">
+      Change
+    </button>
+  </div>
+
+  <!-- Mapa jako placeholder -->
+  <div class="card bg-base-100 shadow-md">
+    <div class="card-body h-56 flex items-center justify-center">
+      <span class="text-2xl opacity-70">
+        🗺️ Map view
+      </span>
+    </div>
+  </div>
+
+  <!-- Statystyki trasy -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <div class="stat bg-base-100 rounded-2xl shadow">
+      <div class="stat-title">ETA</div>
+      <div class="stat-value text-3xl">24 min</div>
+      <div class="stat-desc">Arrive before 09:30</div>
+    </div>
+
+    <div class="stat bg-base-100 rounded-2xl shadow">
+      <div class="stat-title">Distance</div>
+      <div class="stat-value text-3xl">18.4 km</div>
+      <div class="stat-desc">Via A480 · fastest</div>
+    </div>
+
+    <div class="stat bg-base-100 rounded-2xl shadow">
+      <div class="stat-title">Traffic</div>
+      <div class="stat-value text-3xl">Medium</div>
+      <div class="stat-desc text-warning">+6 min delay</div>
+    </div>
+  </div>
+</div>
