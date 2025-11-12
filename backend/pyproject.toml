@@ -5,7 +5,6 @@ description = "Assistant Numérique de Covoiturage Universel Libre et Évolutif"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "moshi>=0.2.11",
     "msgpack>=1.1.2",
     "numpy>=2.2.6",
     "sounddevice>=0.5.0",
