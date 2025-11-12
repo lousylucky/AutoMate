@@ -11,6 +11,7 @@ with pkgs;
         python-pkgs.numpy
         python-pkgs.sounddevice
         python-pkgs.websockets
+        python-pkgs.google-api-python-client
       ]))
     ];
   }
