@@ -42,7 +42,7 @@ export class ChatService {
               description: 'The youtube video id.',
             },
           },
-          required: ['query'],
+          required: ['videoId'],
         },
       }
     }
