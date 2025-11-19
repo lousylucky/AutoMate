@@ -1,84 +1,82 @@
-<div class="space-y-6">
-  <h1 class="text-3xl font-semibold">Music</h1>
+<!-- we need to hide yt iframe -->
+<div id="yt-hidden-player" class="hidden"></div>
 
-  <!-- Now playing -->
-  <div class="card bg-base-100 shadow-xl">
-    <div class="card-body flex flex-col md:flex-row gap-6 items-center">
-      <div class="avatar">
-        <div
-          class="w-24 rounded-2xl bg-gradient-to-br from-secondary to-primary flex items-center justify-center text-4xl"
-        >
-          🎧
-        </div>
-      </div>
+<div class="w-full h-full px-6 py-8">
+  <div
+    class="w-full h-full flex flex-col items-center justify-center bg-base-200/90 rounded-[32px] px-8 py-10 shadow-2xl"
+  >
 
-      <div class="flex-1 w-full space-y-3">
-        <div>
-          <h2 class="card-title text-xl">
-            Fred again.. – Turn On The Lights
-          </h2>
-          <p class="text-sm opacity-70">feat. Future</p>
+    <!-- album cover -->
+    <div
+      class="relative w-40 h-40 md:w-48 md:h-48 rounded-[28px] overflow-hidden bg-base-300 flex items-center justify-center mb-6"
+    >
+      <ng-container *ngIf="(currentTrack$ | async) as track; else noTrackArtwork">
+        <img
+          *ngIf="track.thumbnailUrl"
+          [src]="track.thumbnailUrl"
+          alt="Cover"
+          class="w-full h-full object-cover"
+        />
+        <div *ngIf="!track.thumbnailUrl" class="text-4xl">
+          🎵
         </div>
+      </ng-container>
 
-        <div class="space-y-1">
-          <progress
-            class="progress progress-primary w-full"
-            value="40"
-            max="100"
-          ></progress>
-          <div class="flex justify-between text-xs opacity-70">
-            <span>1:23</span>
-            <span>3:45</span>
-          </div>
-        </div>
-
-        <div class="flex gap-2">
-          <button class="btn btn-circle btn-outline btn-sm">
-            ⏮
-          </button>
-          <button class="btn btn-circle btn-primary btn-sm">
-            ⏯
-          </button>
-          <button class="btn btn-circle btn-outline btn-sm">
-            ⏭
-          </button>
-        </div>
-      </div>
+      <ng-template #noTrackArtwork>
+        <span class="text-4xl">🎵</span>
+      </ng-template>
     </div>
-  </div>
 
-  <!-- Playlists -->
-  <div class="card bg-base-100 shadow-md">
-    <div class="card-body">
-      <div class="flex items-center justify-between mb-2">
-        <h2 class="card-title text-lg">Playlists</h2>
-        <button class="btn btn-ghost btn-xs">See all</button>
-      </div>
-
-      <div class="divide-y divide-base-200">
-        <div class="flex items-center justify-between py-2">
-          <div>
-            <div class="font-medium">Drive – Playlist #1</div>
-            <div class="text-xs opacity-70">24 tracks · 1h 32m</div>
-          </div>
-          <span class="badge badge-outline">Active</span>
+    <!-- title, artist -->
+    <div class="flex-1 w-full max-w-3xl flex flex-col items-center gap-6">
+      <ng-container *ngIf="(currentTrack$ | async) as track; else noTrack">
+        <div class="text-2xl md:text-3xl font-semibold text-center truncate w-full">
+          {{ track.title }}
         </div>
-
-        <div class="flex items-center justify-between py-2">
-          <div>
-            <div class="font-medium">Chill Night – Playlist #2</div>
-            <div class="text-xs opacity-70">18 tracks · 54m</div>
-          </div>
-          <span class="badge badge-outline">Saved</span>
+        <div class="text-lg opacity-70 text-center truncate w-full">
+          {{ track.artist || 'Unknown artist' }}
         </div>
+      </ng-container>
 
-        <div class="flex items-center justify-between py-2">
-          <div>
-            <div class="font-medium">Workout – Playlist #3</div>
-            <div class="text-xs opacity-70">32 tracks · 1h 48m</div>
-          </div>
-          <span class="badge badge-outline">Suggested</span>
+      <ng-template #noTrack>
+        <div class="text-2xl opacity-70 text-center w-full">
+          No track playing
         </div>
+      </ng-template>
+
+      <!-- progress bar -->
+      <ng-container *ngIf="(currentTime$ | async) as currentTime">
+        <ng-container *ngIf="(duration$ | async) as duration">
+          <div class="mt-2 w-full max-w-2xl">
+            <input
+              type="range"
+              min="0"
+              max="100"
+              [value]="duration ? (currentTime / duration) * 100 : 0"
+              class="range range-sm w-full"
+              disabled
+            />
+            <div class="flex justify-between text-xs opacity-70 mt-2">
+              <span>{{ formatTime(currentTime) }}</span>
+              <span>{{ formatTime(duration) }}</span>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+
+      <!-- buttons to be deleted in future -->
+      <div class="mt-4 flex items-center justify-center gap-6">
+        <button
+          class="btn border-none bg-primary text-primary-content rounded-full w-24 h-24 shadow-xl flex items-center justify-center"
+          (click)="togglePlay()"
+        >
+          <span class="text-3xl" *ngIf="(isPlaying$ | async); else playIcon">
+            ⏸
+          </span>
+          <ng-template #playIcon>
+            <span class="text-3xl">▶️</span>
+          </ng-template>
+        </button>
       </div>
     </div>
   </div>

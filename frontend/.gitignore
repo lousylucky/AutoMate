@@ -24,33 +24,11 @@
 # environment files
 /src/environments/environment*.ts
 
-# misc
-/.angular/cache
-/.angular/config.json
-/.angular/analytics.json
-/.angular/local
-/.angular/stats.json
+.angular
 
 # system files
 .DS_Store
 Thumbs.db
-
-# optional: OS files
-ehthumbs.db
-Desktop.ini
-
-# coverage reports
-/coverage
-
-# firebase / cloud
-/.firebase
-/firebase-debug.log
-/firebase-debug.*.log
-
-# testing
-/karma-*.log
-/testem.log
-/typings
 
 # build tools / package managers
 package-lock.json
@@ -64,5 +42,3 @@ yarn-error.log
 /.env.local
 /.env.*.local
 
-# optional: docker / dev stuff
-docker-compose.override.yml
