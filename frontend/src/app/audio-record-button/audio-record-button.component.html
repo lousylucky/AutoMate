@@ -1,0 +1,45 @@
+<!-- Main round recording button -->
+<button
+  type="button"
+  (click)="onButtonClick()"
+  class="btn btn-circle btn-lg transition-all duration-150 flex items-center justify-center"
+  [ngClass]="{
+    'btn-primary': !isRecording && !isUploading,
+    'btn-error': isRecording,
+    'btn-disabled': isUploading
+  }"
+  [disabled]="isUploading || !hasMediaDevices"
+  [attr.aria-label]="isRecording ? 'Stop recording' : 'Start recording'"
+>
+  @if (isUploading) {
+    <!-- Larger spinner in the center while uploading -->
+    <span class="loading loading-spinner loading-md"></span>
+  } @else {
+    <!-- Microphone or stop icon depending on state -->
+    @if (!isRecording) {
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        class="w-8 h-8"
+        fill="currentColor"
+      >
+        <path
+          d="M12 14a3 3 0 0 0 3-3V5a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3z"
+        />
+        <path
+          d="M19 11a1 1 0 1 0-2 0 5 5 0 0 1-10 0 1 1 0 1 0-2 0 7 7 0 0 0 6 6.93V20H8a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-3v-2.07A7 7 0 0 0 19 11z"
+        />
+      </svg>
+    } @else {
+      <!-- Square stop icon while recording -->
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        class="w-8 h-8"
+        fill="currentColor"
+      >
+        <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+      </svg>
+    }
+  }
+</button>
