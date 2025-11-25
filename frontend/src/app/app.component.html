@@ -1,5 +1,4 @@
 <div class="min-h-screen flex bg-base-300 text-base-content">
-
   <!-- sidebar -->
   <aside
     class="w-20 md:w-24 bg-base-200 border-r border-base-300 flex flex-col items-center py-4 gap-4"
@@ -34,8 +33,18 @@
     </nav>
   </aside>
 
-  <!-- Main screen -->
+  
   <main class="flex-1 p-4 md:p-6 overflow-y-auto">
+    <!-- Main screen -->
     <router-outlet></router-outlet>
   </main>
+
+  <!-- Floating Record Button (bottom-left) -->
+<div class="fixed bottom-6 left-6 z-50">
+  <app-audio-record-button
+    class="shadow-xl"
+    (uploadSuccess)="onAudioUploaded($event)"
+    (uploadError)="onAudioUploadError($event)"
+  ></app-audio-record-button>
+</div>
 </div>
