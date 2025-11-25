@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js';
+import { environment } from '../../environnement/environment';
+
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +11,7 @@ export class Tts {
 
   constructor() {
     this.client = new ElevenLabsClient({
-      apiKey: 'sk_2ec07818d569c978705402f01f3c5daa079f9c4279b6ded5', 
+      apiKey: environment.apiKey, 
     });
   }
 
