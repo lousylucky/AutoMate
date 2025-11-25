@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js';
-import { environment } from '../../environnement/environment';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
