@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js';
-import { environment } from '../../environments/environment';
+import  environment  from '../../environments/environment';
 
 
 @Injectable({
@@ -11,7 +11,7 @@ export class Tts {
 
   constructor() {
     this.client = new ElevenLabsClient({
-      apiKey: environment.apiKey, 
+      apiKey: environment.ELEVENLABS_API_KEY, 
     });
   }
 
@@ -26,8 +26,7 @@ export class Tts {
       }
     );
 
-    const stream = await response;          // HttpResponse
-    const reader = stream.getReader();
+    const reader = response.getReader();
 
     const chunks: Uint8Array[] = [];
 
