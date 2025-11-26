@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { Track } from '../models/track.model';
@@ -17,6 +17,7 @@ export class PlayerComponent implements OnInit {
 
   currentTime$!: Observable<number>;
   duration$!: Observable<number>;
+  volume: number = 0.5;
 
   constructor(
     private trackService: TrackService,
@@ -30,9 +31,28 @@ export class PlayerComponent implements OnInit {
     this.duration$ = this.youtubePlayer.duration$;
 
     this.youtubePlayer.initPlayer('yt-hidden-player');
+    // no default song
+    //this.trackService.devSimulateIncomingTrack();
 
-    // na razie dev symulacja
-    this.trackService.devSimulateIncomingTrack();
+  }
+
+  /**
+   * Trigger play/pause with control key down
+   * @param event 
+   */
+  @HostListener("window:keydown.control", ["$event"])
+  handleCtrlDown(event: KeyboardEvent) {
+    this.togglePlay();
+  }
+
+  @HostListener("window:keydown.ArrowUp", ["$event"])
+  handleVolumeUp(event: KeyboardEvent) {
+    this.youtubePlayer.increaseVolume();
+  }
+
+  @HostListener("window:keydown.ArrowDown", ["$event"])
+  handleVolumeDown(event: KeyboardEvent) {
+    this.youtubePlayer.decreaseVolume();    
   }
 
   togglePlay() {

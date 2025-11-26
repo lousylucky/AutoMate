@@ -12,6 +12,8 @@ declare global {
 export class YoutubePlayerService {
   private player?: any;
 
+  private volume: number = 50;
+
   private apiReady$ = new ReplaySubject<boolean>(1);
 
   private currentVideoIdSubject = new BehaviorSubject<string | null>(null);
@@ -142,5 +144,24 @@ export class YoutubePlayerService {
     } else {
       this.play();
     }
+  }
+
+  setVolume(vol: number) {
+    this.volume = Math.max(0, Math.min(100, vol));
+    if (this.player) {
+      this.player.setVolume(this.volume);
+    }
+  }
+
+  increaseVolume(amount: number = 10) {
+    this.setVolume(this.volume + amount);
+  }
+
+  decreaseVolume(amount: number = 10) {
+    this.setVolume(this.volume - amount);
+  }
+
+  getVolume(): number {
+    return this.volume;
   }
 }
