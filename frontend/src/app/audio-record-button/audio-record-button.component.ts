@@ -8,6 +8,8 @@ import {
 import { HttpClient } from "@angular/common/http";
 import { CommonModule } from "@angular/common";
 import { AutomateService } from '../automate.service';
+import { YoutubePlayerService } from "../services/youtube.service";
+import { take } from "rxjs";
 
 @Component({
   selector: "app-audio-record-button",
@@ -39,6 +41,9 @@ export class AudioRecordButtonComponent implements OnDestroy {
   isUploading = false;
   lastRecordingUrl: string | null = null;
 
+  /** Wether the current recording had to plause the player */
+  private pausedPlayer = false;
+
   /** Used in the template instead of `'mediaDevices' in navigator` */
   readonly hasMediaDevices =
     typeof navigator !== "undefined" &&
@@ -50,15 +55,24 @@ export class AudioRecordButtonComponent implements OnDestroy {
   private chunks: BlobPart[] = [];
   private stream: MediaStream | null = null;
 
-  constructor(private http: HttpClient, private automate: AutomateService) {}
+  constructor(private http: HttpClient, private automate: AutomateService, private player: YoutubePlayerService) { }
 
   async onButtonClick() {
     if (!this.hasMediaDevices || this.isUploading) return;
 
     if (!this.isRecording) {
       await this.startRecording();
+      this.player.isPlaying$.pipe(take(1)).subscribe(isPlaying => {
+        this.pausedPlayer = isPlaying;
+        if (isPlaying) {
+          this.player.pause();
+        }
+      });
     } else {
       this.stopRecording();
+      if (this.pausedPlayer) {
+        this.player.play();
+      }
     }
   }
 
