@@ -3,13 +3,14 @@ import { STTService } from './services/speechRecognition.service';
 import { ChatService, ChatState } from './services/chat.service';
 import { ToolCall } from '@mistralai/mistralai/models/components';
 import { YoutubeSearchService } from './services/youtube-search.service';
+import { YoutubePlayerService } from './services/youtube.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AutomateService {
 
-  constructor(private stt: STTService, private chat: ChatService, private youtube: YoutubeSearchService) { }
+  constructor(private stt: STTService, private chat: ChatService, private youtube: YoutubeSearchService, private player: YoutubePlayerService) { }
 
   async handleAudioCommand(audio: Blob) {
     console.log("Handle record finish")
@@ -46,13 +47,14 @@ export class AutomateService {
     switch (call.function.name) {
       case 'musicSearch':
         let query = JSON.parse(call.function.arguments as string).query;
-        let tracks = await this.youtube.search(query).toPromise();
+        let tracks = await this.youtube.search(query, 5).toPromise();
         console.log(`YouTube search results for '${query}': ${JSON.stringify(tracks)}`);
         return JSON.stringify(tracks)
         
       case 'musicPlay':
         let videoId = JSON.parse(call.function.arguments as string).videoId;
-        console.log(`TODO: Play music ${videoId}`);
+        console.log(`Playing videoId ${videoId}`);
+        this.player.load(videoId);
         return "success";
 
       case 'speak':
