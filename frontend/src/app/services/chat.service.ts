@@ -22,7 +22,7 @@ export class ChatService {
           properties: {
             query: {
               type: 'string',
-              description: 'The search query.',
+              description: 'The search query',
             },
           },
           required: ['query'],
@@ -39,13 +39,38 @@ export class ChatService {
           properties: {
             videoId: {
               type: 'string',
-              description: 'The youtube video id.',
+              description: 'The youtube video id',
             },
           },
           required: ['videoId'],
         },
       }
     },
+    {
+      type: "function",
+      function: {
+        name: "speak",
+        description: "Speak to the user, and get a response",
+        parameters: {
+          type: 'object',
+          properties: {
+            content: {
+              type: 'string',
+              description: 'The speech content',
+            },
+          },
+          required: ['content'],
+        },
+      }
+    },
+    {
+      type: "function",
+      function: {
+        name: "endConversation",
+        description: "End the conversation with the user",
+        parameters: {},
+      }
+    }
   ];
 
   constructor() {
@@ -62,6 +87,7 @@ export class ChatService {
     const chatResponse = await this.client.chat.complete({
       model: 'ministral-3b-2410',
       tools: this.tools,
+      toolChoice: "any",
       messages,
     });
     const finalResponse = chatResponse.choices[0].message;

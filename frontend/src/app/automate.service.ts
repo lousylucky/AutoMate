@@ -17,15 +17,14 @@ export class AutomateService {
     let commandText = sttResponse!.text;
     console.log(`Transcribed command: ${commandText}`);
 
-    this.chatLoop(this.chat.buildChatState(commandText));
+    let chatState = this.chat.buildChatState(commandText);
+    while (true) {
+      let [chatResponse, context] = await this.chat.ask(chatState);
 
+      if (!chatResponse.toolCalls) {
+        throw Error("Unimplemented: handle regular messages");
+      }
 
-  }
-
-  private async chatLoop(state: ChatState) {
-    let [chatResponse, context] = await this.chat.ask(state);
-
-    if (chatResponse.toolCalls) {
       if (chatResponse.toolCalls.length != 1) {
         throw Error("Unimplemented: handle multiple errors");
       }
@@ -33,14 +32,16 @@ export class AutomateService {
       let call = chatResponse.toolCalls[0];
       let toolResultText = await this.handleToolCall(call);
 
-      state.push({ role: "tool", content: toolResultText, name: call.function.name, toolCallId: call.id });
-      await this.chatLoop(state);
-    } else {
-      console.log(`Got text response: ${chatResponse.content}`);
+      if (toolResultText === null) {
+        console.log("Conversation end");
+        break
+      }
+
+      chatState.push({ role: "tool", content: toolResultText, name: call.function.name, toolCallId: call.id });
     }
   }
 
-  private async handleToolCall(call: ToolCall): Promise<string> {
+  private async handleToolCall(call: ToolCall): Promise<string | null> {
     console.log(`Executing command ${call.function.name} with args ${call.function.arguments.toString()}`)
     switch (call.function.name) {
       case 'musicSearch':
@@ -48,8 +49,21 @@ export class AutomateService {
         let tracks = await this.youtube.search(query).toPromise();
         console.log(`YouTube search results for '${query}': ${JSON.stringify(tracks)}`);
         return JSON.stringify(tracks)
+        
+      case 'musicPlay':
+        let videoId = JSON.parse(call.function.arguments as string).videoId;
+        console.log(`TODO: Play music ${videoId}`);
+        return "success";
+
+      case 'speak':
+        let speechText= JSON.parse(call.function.arguments as string).content;
+        console.log(`TODO: Ask ${speechText} to the user`);
+        return "Oui stp";
+
+      case 'endConversation':
+        return null;
     }
 
-    return "error";
+    return null;
   }
 }
