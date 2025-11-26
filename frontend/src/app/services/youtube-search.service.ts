@@ -39,7 +39,7 @@ export class YoutubeSearchService {
           artist: item.snippet.channelTitle,
           description: item.snippet.description,
           videoId: item.id.videoId,
-          thumbnailUrl: item.snippet.thumbnails.high || item.snippet.thumbnails.default.url,
+          thumbnailUrl: item.snippet.thumbnails.high ?  item.snippet.thumbnails.high.url : item.snippet.thumbnails.default.url,
         }))
       )
     );
