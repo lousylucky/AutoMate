@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { environment } from "../../environments/environment";
+import environment from "../../environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { map, Observable } from "rxjs";
 import { Track } from "../models/track.model";
@@ -10,7 +10,7 @@ import { Track } from "../models/track.model";
 export class YoutubeSearchService {
   constructor() {}
 
-  private readonly apiKey = environment.googleApiKey;
+  private readonly apiKey = environment.GOOGLE_API_KEY;
   private readonly apiVersion = "v3";
 
   private readonly http = inject(HttpClient);
