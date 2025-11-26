@@ -7,6 +7,8 @@ import { TTSService } from './services/tts';
 import { TrackService } from './services/track.service';
 import { Track } from './models/track.model';
 import { AudioRecorderService } from './services/audio-recorder.service';
+import { YoutubePlayerService } from './services/youtube.service';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -14,8 +16,7 @@ export class AutomateService {
 
   private lastFoundTracks: Track[] = [];
 
-  constructor(private stt: STTService, private chat: ChatService, private tts: TTSService, private youtube: YoutubeSearchService, private player: TrackService, private recorder: AudioRecorderService) { }
-
+  constructor(private stt: STTService, private chat: ChatService, private tts: TTSService, private youtube: YoutubeSearchService, private track: TrackService, private player:YoutubePlayerService, private recorder: AudioRecorderService) { }
 
   async handleAudioCommand(audio: Blob) {
     console.log("Handle record finish")
@@ -73,16 +74,24 @@ export class AutomateService {
         return JSON.stringify(strippedTracks);
       }
 
-      case 'musicPlay': {
+      case 'musicLoad': {
         const { videoId } = JSON.parse(call.function.arguments as string);
 
         console.log(`Playing videoId ${videoId}`);
 
         const track = this.lastFoundTracks.find(t => t.videoId === videoId) || { videoId };
-        this.player.setTrack(track);
+        this.track.setTrack(track);
 
         return "success";
       }
+
+      case 'musicPause':
+        this.player.pause();
+        return "paused";
+
+      case 'musicResume':
+        this.player.play();
+        return "resumed";
 
       case "speak": {
         const { content } = JSON.parse(call.function.arguments as string);
