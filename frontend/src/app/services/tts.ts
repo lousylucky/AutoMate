@@ -26,8 +26,7 @@ export class Tts {
       }
     );
 
-    const stream = await response;          // HttpResponse
-    const reader = stream.getReader();
+    const reader = response.getReader();
 
     const chunks: Uint8Array[] = [];
 
