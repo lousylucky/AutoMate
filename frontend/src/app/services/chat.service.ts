@@ -4,7 +4,7 @@ import { Mistral } from '@mistralai/mistralai';
 import environment from '../../environments/environment';
 import { AssistantMessage, ChatCompletionRequest, Tool } from '@mistralai/mistralai/models/components';
 
-type ChatState = ChatCompletionRequest["messages"];
+export type ChatState = ChatCompletionRequest["messages"];
 
 @Injectable({
   providedIn: 'root'
@@ -45,12 +45,16 @@ export class ChatService {
           required: ['videoId'],
         },
       }
-    }
+    },
   ];
 
   constructor() {
     const apiKey = environment.MISTRAL_API_KEY;
     this.client = new Mistral({ apiKey: apiKey });
+  }
+
+  buildChatState(firstMessage: string): ChatState {
+    return [{ role: "user", content: firstMessage }];
   }
 
   async ask(messages: ChatState): Promise<[AssistantMessage, ChatState]> {
