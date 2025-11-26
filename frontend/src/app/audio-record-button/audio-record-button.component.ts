@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { AutomateService } from '../automate.service';
 
 @Component({
   selector: 'app-audio-record-button',
@@ -32,7 +33,7 @@ export class AudioRecordButtonComponent implements OnDestroy {
   private chunks: BlobPart[] = [];
   private stream: MediaStream | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private automate: AutomateService) {}
 
   async onButtonClick() {
     if (!this.hasMediaDevices || this.isUploading) return;
@@ -99,27 +100,7 @@ export class AudioRecordButtonComponent implements OnDestroy {
     }
     this.lastRecordingUrl = URL.createObjectURL(blob);
 
-    this.uploadRecording(blob);
-  }
-
-  private uploadRecording(blob: Blob) {
-    const formData = new FormData();
-    formData.append('file', blob, 'recording.webm');
-
-    this.isUploading = true;
-
-    this.http.post(this.uploadUrl, formData).subscribe({
-      next: res => {
-        this.isUploading = false;
-        this.uploadSuccess.emit(res);
-        console.log('Recording uploaded', res);
-      },
-      error: err => {
-        this.isUploading = false;
-        this.uploadError.emit(err);
-        console.error('Recording upload failed', err);
-      },
-    });
+    this.automate.handleAudioCommand(blob);
   }
 
   ngOnDestroy() {
