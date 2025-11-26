@@ -40,6 +40,6 @@ export class Tts {
     const audioUrl = URL.createObjectURL(audioBlob);
 
     const audio = new Audio(audioUrl);
-    audio.play();
+    await audio.play();
   }
 }
