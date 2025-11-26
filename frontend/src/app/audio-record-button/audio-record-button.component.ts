@@ -1,16 +1,33 @@
-import { Component, EventEmitter, Output, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
+import {
+  Component,
+  EventEmitter,
+  Output,
+  OnDestroy,
+  HostListener,
+} from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { CommonModule } from "@angular/common";
 
 @Component({
-  selector: 'app-audio-record-button',
+  selector: "app-audio-record-button",
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './audio-record-button.component.html',
+  templateUrl: "./audio-record-button.component.html",
 })
 export class AudioRecordButtonComponent implements OnDestroy {
+
+  @HostListener("window:keydown", ["$event"])
+  handleSpaceShortcut(event: KeyboardEvent) {
+    if (event.code === "Space") {
+      event.preventDefault(); // prevent default page scroll 
+      if (!this.isUploading && this.hasMediaDevices) {
+        this.onButtonClick();
+      }
+    }
+  }
+
   /** Endpoint where the audio file will be uploaded */
-  readonly uploadUrl = '/api/audio/upload';
+  readonly uploadUrl = "/api/audio/upload";
 
   /** Events emitted to the parent component (e.g. for showing a toast) */
   @Output() uploadSuccess = new EventEmitter<any>();
@@ -23,9 +40,9 @@ export class AudioRecordButtonComponent implements OnDestroy {
 
   /** Used in the template instead of `'mediaDevices' in navigator` */
   readonly hasMediaDevices =
-    typeof navigator !== 'undefined' &&
+    typeof navigator !== "undefined" &&
     !!navigator.mediaDevices &&
-    typeof navigator.mediaDevices.getUserMedia === 'function';
+    typeof navigator.mediaDevices.getUserMedia === "function";
 
   /** Internal recording state */
   private mediaRecorder: MediaRecorder | null = null;
@@ -47,7 +64,7 @@ export class AudioRecordButtonComponent implements OnDestroy {
   private async startRecording() {
     try {
       if (!navigator.mediaDevices?.getUserMedia) {
-        alert('Your browser does not support audio recording.');
+        alert("Your browser does not support audio recording.");
         return;
       }
 
@@ -56,7 +73,7 @@ export class AudioRecordButtonComponent implements OnDestroy {
       this.chunks = [];
 
       this.mediaRecorder = new MediaRecorder(this.stream, {
-        mimeType: 'audio/webm',
+        mimeType: "audio/webm",
       });
 
       this.mediaRecorder.ondataavailable = (event: BlobEvent) => {
@@ -72,26 +89,26 @@ export class AudioRecordButtonComponent implements OnDestroy {
       this.mediaRecorder.start();
       this.isRecording = true;
     } catch (err) {
-      console.error('Microphone / MediaRecorder error:', err);
-      alert('Cannot access the microphone.');
+      console.error("Microphone / MediaRecorder error:", err);
+      alert("Cannot access the microphone.");
     }
   }
 
   private stopRecording() {
-    if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
+    if (this.mediaRecorder && this.mediaRecorder.state !== "inactive") {
       this.mediaRecorder.stop();
     }
     this.isRecording = false;
 
     // Stop microphone stream
     if (this.stream) {
-      this.stream.getTracks().forEach(track => track.stop());
+      this.stream.getTracks().forEach((track) => track.stop());
       this.stream = null;
     }
   }
 
   private handleRecordingStop() {
-    const blob = new Blob(this.chunks, { type: 'audio/webm' });
+    const blob = new Blob(this.chunks, { type: "audio/webm" });
 
     // Update preview of the last recording
     if (this.lastRecordingUrl) {
@@ -104,31 +121,31 @@ export class AudioRecordButtonComponent implements OnDestroy {
 
   private uploadRecording(blob: Blob) {
     const formData = new FormData();
-    formData.append('file', blob, 'recording.webm');
+    formData.append("file", blob, "recording.webm");
 
     this.isUploading = true;
 
     this.http.post(this.uploadUrl, formData).subscribe({
-      next: res => {
+      next: (res) => {
         this.isUploading = false;
         this.uploadSuccess.emit(res);
-        console.log('Recording uploaded', res);
+        console.log("Recording uploaded", res);
       },
-      error: err => {
+      error: (err) => {
         this.isUploading = false;
         this.uploadError.emit(err);
-        console.error('Recording upload failed', err);
+        console.error("Recording upload failed", err);
       },
     });
   }
 
   ngOnDestroy() {
     // Clean up resources when the component is destroyed
-    if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
+    if (this.mediaRecorder && this.mediaRecorder.state !== "inactive") {
       this.mediaRecorder.stop();
     }
     if (this.stream) {
-      this.stream.getTracks().forEach(track => track.stop());
+      this.stream.getTracks().forEach((track) => track.stop());
     }
     if (this.lastRecordingUrl) {
       URL.revokeObjectURL(this.lastRecordingUrl);
