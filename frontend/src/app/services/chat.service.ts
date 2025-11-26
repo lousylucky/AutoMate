@@ -101,7 +101,7 @@ You are a minimal voice music assistant.
 }
 
   async ask(messages: ChatState): Promise<[AssistantMessage, ChatState]> {
-    console.log("Calling ask with state ", JSON.stringify(messages))
+    console.debug("Calling ask with state ", JSON.stringify(messages))
     const chatResponse = await this.client.chat.complete({
       model: 'ministral-3b-2410',
       tools: this.tools,
