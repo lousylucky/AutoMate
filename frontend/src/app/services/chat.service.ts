@@ -78,9 +78,27 @@ export class ChatService {
     this.client = new Mistral({ apiKey: apiKey });
   }
 
-  buildChatState(firstMessage: string): ChatState {
-    return [{ role: "user", content: firstMessage }];
-  }
+buildChatState(firstMessage: string): ChatState {
+  return [
+    {
+      role: "system",
+      content: `
+You are a minimal voice music assistant.
+
+- Your primary job is to use the tools musicSearch and musicPlay.
+- Do NOT chat with the user, do NOT explain what you are doing.
+- When the user asks to play some music (e.g. "play Michaela Jacksona", "met moi Billie Jean"):
+  - Immediately call musicSearch with a good search query.
+  - Then, based on the results, call musicPlay for the best match.
+- Only call speak when you really need extra clarification.
+- Prefer choosing the first reasonable track instead of asking questions.
+- End the conversation with endConversation as soon as the command is handled.
+- User speak only French or English 
+      `.trim()
+    },
+    { role: "user", content: firstMessage }
+  ];
+}
 
   async ask(messages: ChatState): Promise<[AssistantMessage, ChatState]> {
     console.log("Calling ask with state ", JSON.stringify(messages))
@@ -96,5 +114,4 @@ export class ChatService {
 
     return [finalResponse, messages];
   }
-
 }
