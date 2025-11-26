@@ -6,15 +6,16 @@ import { YoutubeSearchService } from './services/youtube-search.service';
 import { TTSService } from './services/tts';
 import { TrackService } from './services/track.service';
 import { Track } from './models/track.model';
-
+import { AudioRecorderService } from './services/audio-recorder.service';
 @Injectable({
   providedIn: 'root'
 })
 export class AutomateService {
 
   private lastFoundTracks: Track[] = [];
-  
-  constructor(private stt: STTService, private chat: ChatService, private tts: TTSService, private youtube: YoutubeSearchService, private player: TrackService) { }
+
+  constructor(private stt: STTService, private chat: ChatService, private tts: TTSService, private youtube: YoutubeSearchService, private player: TrackService, private recorder: AudioRecorderService) { }
+
 
   async handleAudioCommand(audio: Blob) {
     console.log("Handle record finish")
@@ -42,43 +43,63 @@ export class AutomateService {
         break
       }
 
-      chatState.push({ role: "tool", content: toolResultText, name: call.function.name, toolCallId: call.id });
+      chatState.push({
+        role: "tool",
+        content: toolResultText,
+        name: call.function.name,
+        toolCallId: call.id
+      });
     }
   }
 
   private async handleToolCall(call: ToolCall): Promise<string | null> {
-    console.log(`Executing command ${call.function.name} with args ${call.function.arguments.toString()}`)
+    console.log(`Executing command ${call.function.name} with args ${call.function.arguments.toString()}`);
+
     switch (call.function.name) {
-      case 'musicSearch':
+
+      case 'musicSearch': {
         const query = JSON.parse(call.function.arguments as string).query;
+
         this.lastFoundTracks = (await this.youtube.search(query, 5).toPromise())!;
-        // Remove useless stuff from context
-        const strippedTracks= this.lastFoundTracks.map(track => {
-          return {
-            title: track.title,
-            artist: track.artist,
-            description: track.description,
-            videoId:  track.videoId,
-          }
-        });
+
+        const strippedTracks = this.lastFoundTracks.map(track => ({
+          title: track.title,
+          artist: track.artist,
+          description: track.description,
+          videoId: track.videoId,
+        }));
+
         console.log(`YouTube search results for '${query}': ${JSON.stringify(strippedTracks)}`);
-        return JSON.stringify(strippedTracks)
+        return JSON.stringify(strippedTracks);
+      }
 
-      case 'musicPlay':
-        let videoId = JSON.parse(call.function.arguments as string).videoId;
+      case 'musicPlay': {
+        const { videoId } = JSON.parse(call.function.arguments as string);
+
         console.log(`Playing videoId ${videoId}`);
-        const track = this.lastFoundTracks.find(track => track.videoId == videoId) || {
-          videoId: videoId
-        };
-        this.player.setTrack(track);
-        return "success";
 
-      case 'speak':
-        let speechText = JSON.parse(call.function.arguments as string).content;
-        console.log(`Synthetising '${speechText}' speeck to the user`);
-        await this.tts.speak(speechText);
-        console.log("TODO: Start recording");
-        return "Oui stp";
+        const track = this.lastFoundTracks.find(t => t.videoId === videoId) || { videoId };
+        this.player.setTrack(track);
+
+        return "success";
+      }
+
+      case "speak": {
+        const { content } = JSON.parse(call.function.arguments as string);
+
+        console.log(`Synthesizing '${content}' speech to the user`);
+        await this.tts.speak(content);
+
+        console.log("Waiting for user's spoken answer...");
+        const answerBlob = await this.recorder.recordOnce();
+
+        const answerStt = await this.stt.transcribeChunk(answerBlob).toPromise();
+        const answerText = answerStt?.text ?? "";
+
+        console.log(`User answered (STT): ${answerText}`);
+
+        return answerText;
+      }
 
       case 'endConversation':
         return null;

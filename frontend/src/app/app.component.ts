@@ -15,10 +15,10 @@ export class AppComponent {
   title = 'autoMate';
 
     onAudioUploaded(res: any) {
-    console.log('Audio zapisane na backendzie', res);
+      console.log('Audio uploaded successfully:', res);
   }
 
   onAudioUploadError(err: any) {
-    console.error('Błąd uploadu audio', err);
+      console.error('Audio upload error:', err);
   }
 }
