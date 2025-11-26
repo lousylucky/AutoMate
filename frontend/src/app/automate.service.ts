@@ -3,15 +3,18 @@ import { STTService } from './services/speechRecognition.service';
 import { ChatService, ChatState } from './services/chat.service';
 import { ToolCall } from '@mistralai/mistralai/models/components';
 import { YoutubeSearchService } from './services/youtube-search.service';
-import { YoutubePlayerService } from './services/youtube.service';
 import { TTSService } from './services/tts';
+import { TrackService } from './services/track.service';
+import { Track } from './models/track.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AutomateService {
 
-  constructor(private stt: STTService, private chat: ChatService, private tts: TTSService, private youtube: YoutubeSearchService, private player: YoutubePlayerService) { }
+  private lastFoundTracks: Track[] = [];
+  
+  constructor(private stt: STTService, private chat: ChatService, private tts: TTSService, private youtube: YoutubeSearchService, private player: TrackService) { }
 
   async handleAudioCommand(audio: Blob) {
     console.log("Handle record finish")
@@ -48,9 +51,9 @@ export class AutomateService {
     switch (call.function.name) {
       case 'musicSearch':
         const query = JSON.parse(call.function.arguments as string).query;
-        const tracks = await this.youtube.search(query, 5).toPromise();
+        this.lastFoundTracks = (await this.youtube.search(query, 5).toPromise())!;
         // Remove useless stuff from context
-        const strippedTracks= tracks?.map(track => {
+        const strippedTracks= this.lastFoundTracks.map(track => {
           return {
             title: track.title,
             artist: track.artist,
@@ -64,7 +67,10 @@ export class AutomateService {
       case 'musicPlay':
         let videoId = JSON.parse(call.function.arguments as string).videoId;
         console.log(`Playing videoId ${videoId}`);
-        this.player.load(videoId);
+        const track = this.lastFoundTracks.find(track => track.videoId == videoId) || {
+          videoId: videoId
+        };
+        this.player.setTrack(track);
         return "success";
 
       case 'speak':
