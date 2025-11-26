@@ -47,10 +47,19 @@ export class AutomateService {
     console.log(`Executing command ${call.function.name} with args ${call.function.arguments.toString()}`)
     switch (call.function.name) {
       case 'musicSearch':
-        let query = JSON.parse(call.function.arguments as string).query;
-        let tracks = await this.youtube.search(query, 5).toPromise();
-        console.log(`YouTube search results for '${query}': ${JSON.stringify(tracks)}`);
-        return JSON.stringify(tracks)
+        const query = JSON.parse(call.function.arguments as string).query;
+        const tracks = await this.youtube.search(query, 5).toPromise();
+        // Remove useless stuff from context
+        const strippedTracks= tracks?.map(track => {
+          return {
+            title: track.title,
+            artist: track.artist,
+            description: track.description,
+            videoId:  track.videoId,
+          }
+        });
+        console.log(`YouTube search results for '${query}': ${JSON.stringify(strippedTracks)}`);
+        return JSON.stringify(strippedTracks)
 
       case 'musicPlay':
         let videoId = JSON.parse(call.function.arguments as string).videoId;

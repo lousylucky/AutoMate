@@ -36,11 +36,10 @@ export class YoutubeSearchService {
       map((response) =>
         response.items.map((item: any) => ({
           title: item.snippet.title,
+          artist: item.snippet.channelTitle,
           description: item.snippet.description,
           videoId: item.id.videoId,
-          thumbnailUrl: item.snippet.thumbnails.high ?  item.snippet.thumbnails.high.url : item.snippet.thumbnails.default.url,
-          artist: item.snippet.channelTitle,
-          url: `https://www.youtube.com/watch?v=${item.id.videoId}`,
+          thumbnailUrl: item.snippet.thumbnails.high || item.snippet.thumbnails.default.url,
         }))
       )
     );
