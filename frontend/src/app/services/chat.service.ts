@@ -77,7 +77,23 @@ export class ChatService {
         name: "musicResume",
         description: "Resume music playback",
         parameters: {},
-      }
+      },
+    },
+    {
+      type: "function",
+      function: {
+        name: "musicDownVolume",
+        description: "Turn down the music",
+        parameters: {},
+      },
+    },
+    {
+      type: "function",
+      function: {
+        name: "musicUpVolume",
+        description: "Turn up the music",
+        parameters: {},
+      },
     },
     {
       type: "function",
@@ -85,8 +101,8 @@ export class ChatService {
         name: "endConversation",
         description: "End the conversation with the user",
         parameters: {},
-      }
-    }
+      },
+    },
   ];
 
   constructor() {
@@ -103,8 +119,11 @@ You are a minimal voice assistant used for controlling a music player.
 
 - Your primary job is to use the provided tools based on user commands
 - Do NOT chat with the user, do NOT explain what you are doing
+- The user usually asks one thing at a time
+- If the user ask to change volume don't change the current music
+- If the user ask to toggle playback don't change the current music
 - When the user asks to put some music:
-  - Keep in mind that the user might just want to toggle playback using musicResume
+  - Keep in mind that the user might just want to toggle playback using musicResume or change the volume of the music with musicUpVolume or musicDownVolume
   - Immediately call musicSearch with a good search query
   - Then, based on the results, call musicLoad for the best match
 - Only call speak when you really need extra clarification

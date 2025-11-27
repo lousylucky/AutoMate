@@ -89,6 +89,12 @@ export class AutomateService {
         this.player.pause();
         return "paused";
 
+      case 'musicDownVolume':
+        this.player.decreaseVolume(20);
+        return "descreasedVolume";
+      case 'musicUpVolume':
+        this.player.increaseVolume(20);
+        return "increaseVolume";
       case 'musicResume':
         this.player.play();
         return "resumed";
