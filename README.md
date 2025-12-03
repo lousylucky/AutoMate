@@ -2,7 +2,7 @@
 
 **Assistant Numérique de Covoiturage Universel Libre et Évolutif**
 
-AutoMate est une application web intelligente qui combine la recherche de musique YouTube, les commandes vocales et la synthèse vocale pour créer une expérience de conduite améliorée.
+AutoMate est une application web Angular intelligente qui combine la recherche de musique YouTube, les commandes vocales et la synthèse vocale pour créer une expérience de conduite améliorée.
 
 ---
 
@@ -12,8 +12,6 @@ AutoMate est une application web intelligente qui combine la recherche de musiqu
 - [Architecture](#-architecture)
 - [Prérequis](#-prérequis)
 - [Installation](#-installation)
-  - [Backend (Python)](#backend-python)
-  - [Frontend (Angular)](#frontend-angular)
 - [Configuration](#-configuration)
 - [Utilisation](#-utilisation)
 - [Technologies utilisées](#-technologies-utilisées)
@@ -33,24 +31,21 @@ AutoMate est une application web intelligente qui combine la recherche de musiqu
 
 ## 🏗 Architecture
 
-Le projet est divisé en deux parties principales :
+Le projet est une application Angular à la racine du repository :
 
 ```
 AutoMate/
-├── backend/          # Serveur Python avec WebSocket
-│   ├── main.py       # Point d'entrée du serveur WebSocket
-│   ├── music.py      # Service de recherche YouTube
-│   └── pyproject.toml
-│
-├── frontend/         # Application Angular
-│   ├── src/
-│   │   └── app/
-│   │       ├── audio-record-button/  # Composant d'enregistrement vocal
-│   │       ├── music/                # Composant lecteur de musique
-│   │       ├── navigation/           # Composant navigation
-│   │       └── services/             # Services (chat, TTS, YouTube, etc.)
-│   └── package.json
-│
+├── src/
+│   └── app/
+│       ├── audio-record-button/  # Composant d'enregistrement vocal
+│       ├── music/                # Composant lecteur de musique
+│       ├── navigation/           # Composant navigation
+│       ├── models/               # Modèles de données
+│       └── services/             # Services (chat, TTS, YouTube, etc.)
+├── public/                       # Ressources statiques
+├── package.json
+├── angular.json
+├── tsconfig.json
 └── README.md
 ```
 
@@ -62,15 +57,12 @@ Avant de commencer, assurez-vous d'avoir installé :
 
 ### Outils requis
 - **Node.js** (version 18+) et **npm**
-- **Python** (version 3.10+)
-- **uv** (gestionnaire de paquets Python) ou **pip**
 
 ### Clés API nécessaires
 Vous devrez obtenir les clés API suivantes :
 
 | Service | Description | Lien |
 |---------|-------------|------|
-| **Google API** | Pour la recherche YouTube | [Console Google Cloud](https://console.cloud.google.com/) |
 | **Mistral AI** | Pour l'assistant conversationnel | [Mistral AI](https://mistral.ai/) |
 | **ElevenLabs** | Pour la synthèse vocale (TTS) | [ElevenLabs](https://elevenlabs.io/) |
 
@@ -78,42 +70,10 @@ Vous devrez obtenir les clés API suivantes :
 
 ## 🚀 Installation
 
-### Backend (Python)
-
-1. **Accédez au répertoire backend** :
+1. **Clonez le repository** :
    ```bash
-   cd backend
-   ```
-
-2. **Installez les dépendances** :
-   
-   Avec **uv** (recommandé) :
-   ```bash
-   uv sync
-   ```
-   
-   Ou avec **pip** :
-   ```bash
-   pip install -e .
-   ```
-
-3. **Configurez les variables d'environnement** :
-   ```bash
-   export GOOGLE_API_KEY="votre_clé_api_google"
-   ```
-
-4. **Lancez le serveur** :
-   ```bash
-   python main.py
-   ```
-   
-   Le serveur WebSocket démarrera sur `localhost:4703`.
-
-### Frontend (Angular)
-
-1. **Accédez au répertoire frontend** :
-   ```bash
-   cd frontend
+   git clone https://github.com/lousylucky/AutoMate.git
+   cd AutoMate
    ```
 
 2. **Installez les dépendances** :
@@ -143,13 +103,7 @@ Vous devrez obtenir les clés API suivantes :
 
 ## ⚙️ Configuration
 
-### Variables d'environnement Backend
-
-| Variable | Description |
-|----------|-------------|
-| `GOOGLE_API_KEY` | Clé API Google pour YouTube Data API v3 |
-
-### Variables d'environnement Frontend
+### Variables d'environnement
 
 | Variable | Description |
 |----------|-------------|
@@ -161,10 +115,9 @@ Vous devrez obtenir les clés API suivantes :
 
 ## 🎮 Utilisation
 
-1. **Démarrez le backend** en premier (serveur WebSocket)
-2. **Démarrez le frontend** (serveur Angular)
-3. **Ouvrez l'application** dans votre navigateur à `http://localhost:4200/`
-4. **Utilisez l'interface** :
+1. **Lancez l'application** avec `npm start`
+2. **Ouvrez l'application** dans votre navigateur à `http://localhost:4200/`
+3. **Utilisez l'interface** :
    - Appuyez sur **Espace** ou cliquez sur le bouton d'enregistrement pour donner des commandes vocales
    - Naviguez vers `/music` pour le lecteur de musique
    - Naviguez vers `/navigation` pour les fonctionnalités de navigation
@@ -173,17 +126,12 @@ Vous devrez obtenir les clés API suivantes :
 
 ## 🛠 Technologies utilisées
 
-### Frontend
+### Application
 - **Angular 19** - Framework web
 - **TypeScript** - Langage de programmation
 - **TailwindCSS 4** - Framework CSS
 - **DaisyUI** - Composants UI
 - **RxJS** - Programmation réactive
-
-### Backend
-- **Python 3.10+** - Langage de programmation
-- **WebSockets** - Communication temps réel
-- **Google API Client** - Intégration YouTube
 
 ### Services externes
 - **Mistral AI** - Modèle de langage (ministral-3b-2410)
