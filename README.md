@@ -12,7 +12,6 @@ AutoMate est une application web Angular intelligente qui combine la recherche d
 - [Architecture](#-architecture)
 - [Prérequis](#-prérequis)
 - [Installation](#-installation)
-- [Configuration](#-configuration)
 - [Utilisation](#-utilisation)
 - [Technologies utilisées](#-technologies-utilisées)
 - [Crédits](#-crédits)
@@ -81,7 +80,7 @@ Vous devrez obtenir les clés API suivantes :
    npm install
    ```
 
-3. **Configurez les variables d'environnement** :
+3. **Configurez les clés API** :
    
    Créez un fichier `src/environments/environment.ts` :
    ```typescript
@@ -98,18 +97,6 @@ Vous devrez obtenir les clés API suivantes :
    ```
    
    L'application sera accessible sur `http://localhost:4200/`.
-
----
-
-## ⚙️ Configuration
-
-### Variables d'environnement
-
-| Variable | Description |
-|----------|-------------|
-| `MISTRAL_API_KEY` | Clé API Mistral pour l'assistant IA |
-| `ELEVENLABS_API_KEY` | Clé API ElevenLabs pour la synthèse vocale |
-| `STT_API_KEY` | Clé API pour la reconnaissance vocale (Speech-to-Text) |
 
 ---
 
