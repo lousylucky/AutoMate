@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js';
-import  environment  from '../../environments/environment';
+import environment from '../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root',
 })
-export class Tts {
+export class TTSService {
   private client: ElevenLabsClient;
 
   constructor() {
     this.client = new ElevenLabsClient({
-      apiKey: environment.ELEVENLABS_API_KEY, 
+      apiKey: environment.ELEVENLABS_API_KEY,
     });
   }
 
@@ -40,6 +40,6 @@ export class Tts {
     const audioUrl = URL.createObjectURL(audioBlob);
 
     const audio = new Audio(audioUrl);
-    audio.play();
+    await audio.play();
   }
 }
