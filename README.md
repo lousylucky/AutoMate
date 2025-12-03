@@ -64,6 +64,7 @@ Vous devrez obtenir les clés API suivantes :
 |---------|-------------|------|
 | **Mistral AI** | Pour l'assistant conversationnel | [Mistral AI](https://mistral.ai/) |
 | **ElevenLabs** | Pour la synthèse vocale (TTS) | [ElevenLabs](https://elevenlabs.io/) |
+| **Google Cloud** | Pour la recherche YouTube | [Google Cloud Console](https://console.cloud.google.com/) |
 
 ---
 
@@ -87,7 +88,8 @@ Vous devrez obtenir les clés API suivantes :
    export default {
      MISTRAL_API_KEY: 'votre_clé_mistral',
      ELEVENLABS_API_KEY: 'votre_clé_elevenlabs',
-     STT_API_KEY: 'votre_clé_stt'
+     STT_API_KEY: 'votre_clé_stt',
+     GOOGLE_API_KEY: 'votre_clé_google'
    };
    ```
 
