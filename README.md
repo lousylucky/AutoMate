@@ -18,6 +18,15 @@ AutoMate est une application web Angular intelligente qui combine la recherche d
 
 ---
 
+## 🤝 Contributeurs
+
+Anna Clavelier
+Gaspard Culis
+Laurine De La Chapelle
+Lukasz Matyasik
+Matthieu Rua 
+
+
 ## ✨ Fonctionnalités
 
 - 🎵 **Recherche de musique YouTube** : Recherchez et jouez des vidéos YouTube directement dans l'application
@@ -145,7 +154,3 @@ Ce projet s'inspire des travaux de Kyutai Labs :
 Ce projet est un logiciel libre et évolutif. Consultez le fichier LICENSE pour plus de détails.
 
 ---
-
-## 🤝 Contribution
-
-Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou une pull request pour améliorer le projet.
